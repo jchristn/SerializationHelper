@@ -1,3 +1,5 @@
+<img src="https://github.com/jchristn/SerializationHelper/raw/main/Assets/logo.ico" data-canonical-src="https://github.com/jchristn/SerializationHelper/raw/main/Assets/logo.ico" width="128" height="128" />
+
 # SerializationHelper
 
 SerializationHelper is a simple wrapper around ```System.Text.Json``` to overcome some of the common challenges developers face when using Microsoft's JSON library. 
