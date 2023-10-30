@@ -1,4 +1,4 @@
-<img src="https://github.com/jchristn/SerializationHelper/raw/main/Assets/logo.ico" data-canonical-src="https://github.com/jchristn/SerializationHelper/raw/main/Assets/logo.ico" width="128" height="128" />
+<img src="https://github.com/jchristn/SerializationHelper/blob/main/Assets/logo.png?raw=true" data-canonical-src="https://github.com/jchristn/SerializationHelper/blob/main/Assets/logo.png?raw=true" width="128" height="128" />
 
 # SerializationHelper
 
