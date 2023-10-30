@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;net462;net48;net6.0;net7.0</TargetFrameworks>
+		<ApplicationIcon>logo.ico</ApplicationIcon>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationFile>Serializer.xml</DocumentationFile>
+		<Authors>Joel Christner</Authors>
+		<Description>SerializationHelper is a simple wrapper around System.Text.Json to overcome some of the common challenges developers face when using Microsoft's JSON library compared to the Newtonsoft.Json library. </Description>
+		<Copyright>(c)2023 Joel Christner</Copyright>
+		<PackageProjectUrl>https://github.com/jchristn/SerializationHelper</PackageProjectUrl>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/jchristn/SerializationHelper</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>json serialize serializer serialization deserialize deserializer deserialization system.text.json newtonsoft.json</PackageTags>
+		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="logo.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\Assets\logo.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\LICENSE.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.Text.Json" Version="7.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Serializer.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>

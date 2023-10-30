@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SerializationHelper</name>
+    </assembly>
+    <members>
+        <member name="T:SerializationHelper.Serializer">
+            <summary>
+            JSON serializer.
+            </summary>
+        </member>
+        <member name="P:SerializationHelper.Serializer.DateTimeFormat">
+            <summary>
+            DateTime format.
+            </summary>
+        </member>
+        <member name="P:SerializationHelper.Serializer.Converters">
+            <summary>
+            JSON converters.
+            </summary>
+        </member>
+        <member name="P:SerializationHelper.Serializer.Options">
+            <summary>
+            JSON serializer options.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.DeserializeJson``1(System.Byte[])">
+            <summary>
+            Deserialize JSON to an instance.
+            </summary>
+            <typeparam name="T">Type.</typeparam>
+            <param name="json">JSON bytes.</param>
+            <returns>Instance.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.DeserializeJson``1(System.String)">
+            <summary>
+            Deserialize JSON to an instance.
+            </summary>
+            <typeparam name="T">Type.</typeparam>
+            <param name="json">JSON string.</param>
+            <returns>Instance.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.SerializeJson(System.Object,System.Boolean)">
+            <summary>
+            Serialize object to JSON.
+            </summary>
+            <param name="obj">Object.</param>
+            <param name="pretty">Pretty print.</param>
+            <returns>JSON.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.CopyObject``1(System.Object)">
+            <summary>
+            Copy an object.
+            </summary>
+            <typeparam name="T">Type.</typeparam>
+            <param name="o">Object.</param>
+            <returns>Instance.</returns>
+        </member>
+        <member name="T:SerializationHelper.Serializer.ExceptionConverter`1">
+            <summary>
+            Exception converter.
+            </summary>
+            <typeparam name="TExceptionType">Exception type.</typeparam>
+        </member>
+        <member name="M:SerializationHelper.Serializer.ExceptionConverter`1.CanConvert(System.Type)">
+            <summary>
+            Can convert.
+            </summary>
+            <param name="typeToConvert">Type to convert.</param>
+            <returns>Boolean.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.ExceptionConverter`1.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Read.
+            </summary>
+            <param name="reader">Reader.</param>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">Options.</param>
+            <returns>TExceptionType.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.ExceptionConverter`1.Write(System.Text.Json.Utf8JsonWriter,`0,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Write.
+            </summary>
+            <param name="writer">Writer.</param>
+            <param name="value">Value.</param>
+            <param name="options">Options.</param>
+        </member>
+        <member name="T:SerializationHelper.Serializer.NameValueCollectionConverter">
+            <summary>
+            Name value collection converter.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.NameValueCollectionConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Read.
+            </summary>
+            <param name="reader">Reader.</param>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">Options.</param>
+            <returns>NameValueCollection.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.NameValueCollectionConverter.Write(System.Text.Json.Utf8JsonWriter,System.Collections.Specialized.NameValueCollection,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Write.
+            </summary>
+            <param name="writer">Writer.</param>
+            <param name="value">Value.</param>
+            <param name="options">Options.</param>
+        </member>
+        <member name="T:SerializationHelper.Serializer.DateTimeConverter">
+            <summary>
+            DateTime converter.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.DateTimeConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Read.
+            </summary>
+            <param name="reader">Reader.</param>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">Options.</param>
+            <returns>NameValueCollection.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.DateTimeConverter.Write(System.Text.Json.Utf8JsonWriter,System.DateTime,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Write.
+            </summary>
+            <param name="writer">Writer.</param>
+            <param name="value">Value.</param>
+            <param name="options">Options.</param>
+        </member>
+        <member name="F:SerializationHelper.Serializer.DateTimeConverter._AcceptedFormats">
+            <summary>
+            Reserved for future use.
+            Not used because Read does a TryParse which will evaluate several formats.
+            </summary>
+        </member>
+        <member name="T:SerializationHelper.Serializer.IPAddressConverter">
+            <summary>
+            IP address converter.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.IPAddressConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Read.
+            </summary>
+            <param name="reader">Reader.</param>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">Options.</param>
+            <returns>NameValueCollection.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.IPAddressConverter.Write(System.Text.Json.Utf8JsonWriter,System.Net.IPAddress,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Write.
+            </summary>
+            <param name="writer">Writer.</param>
+            <param name="value">Value.</param>
+            <param name="options">Options.</param>
+        </member>
+    </members>
+</doc>
