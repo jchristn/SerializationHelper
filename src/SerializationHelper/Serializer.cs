@@ -78,6 +78,7 @@
             new NameValueCollectionConverter(),
             new JsonStringEnumConverter(),
             new DateTimeConverter(),
+            new IntPtrConverter(),
             new IPAddressConverter()
         };
 
@@ -347,6 +348,35 @@
                 "MM/dd/yyyy h:mm tt",
                 "MM/dd/yyyy HH:mm:ss"
             };
+        }
+
+        /// <summary>
+        /// IntPtr serializer.  IntPtr cannot be deserialized.
+        /// </summary>
+        public class IntPtrConverter : JsonConverter<IntPtr>
+        {
+            /// <summary>
+            /// Read.
+            /// </summary>
+            /// <param name="reader">Reader.</param>
+            /// <param name="typeToConvert">Type to convert.</param>
+            /// <param name="options">Options.</param>
+            /// <returns>NameValueCollection.</returns>
+            public override IntPtr Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                throw new InvalidOperationException("Properties of type IntPtr cannot be deserialized from JSON.");
+            }
+
+            /// <summary>
+            /// Write.
+            /// </summary>
+            /// <param name="writer">Writer.</param>
+            /// <param name="value">Value.</param>
+            /// <param name="options">Options.</param>
+            public override void Write(Utf8JsonWriter writer, IntPtr value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value.ToString());
+            }
         }
 
         /// <summary>

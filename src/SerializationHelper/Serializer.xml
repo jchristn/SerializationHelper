@@ -136,6 +136,28 @@
             Not used because Read does a TryParse which will evaluate several formats.
             </summary>
         </member>
+        <member name="T:SerializationHelper.Serializer.IntPtrConverter">
+            <summary>
+            IntPtr serializer.  IntPtr cannot be deserialized.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.IntPtrConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Read.
+            </summary>
+            <param name="reader">Reader.</param>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">Options.</param>
+            <returns>NameValueCollection.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.IntPtrConverter.Write(System.Text.Json.Utf8JsonWriter,System.IntPtr,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Write.
+            </summary>
+            <param name="writer">Writer.</param>
+            <param name="value">Value.</param>
+            <param name="options">Options.</param>
+        </member>
         <member name="T:SerializationHelper.Serializer.IPAddressConverter">
             <summary>
             IP address converter.
