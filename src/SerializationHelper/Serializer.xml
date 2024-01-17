@@ -14,16 +14,6 @@
             DateTime format.
             </summary>
         </member>
-        <member name="P:SerializationHelper.Serializer.Converters">
-            <summary>
-            JSON converters.
-            </summary>
-        </member>
-        <member name="P:SerializationHelper.Serializer.Options">
-            <summary>
-            JSON serializer options.
-            </summary>
-        </member>
         <member name="M:SerializationHelper.Serializer.DeserializeJson``1(System.Byte[])">
             <summary>
             Deserialize JSON to an instance.

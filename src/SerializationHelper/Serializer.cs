@@ -34,53 +34,11 @@
             }
         }
 
-        /// <summary>
-        /// JSON converters.
-        /// </summary>
-        public static List<JsonConverter> Converters
-        {
-            get
-            {
-                return _Converters;
-            }
-            set
-            {
-                if (value == null) _Converters = new List<JsonConverter>();
-                else _Converters = value;
-            }
-        }
-
-        /// <summary>
-        /// JSON serializer options.
-        /// </summary>
-        public static JsonSerializerOptions Options
-        {
-            get
-            {
-                return _Options;
-            }
-            set
-            {
-                if (value == null) _Options = new JsonSerializerOptions();
-                else _Options = value;
-            }
-        }
-
         #endregion
 
         #region Private-Members
 
         private static string _DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.ffffffZ";
-
-        private static List<JsonConverter> _Converters = new List<JsonConverter>
-        {
-            new ExceptionConverter<Exception>(),
-            new NameValueCollectionConverter(),
-            new JsonStringEnumConverter(),
-            new DateTimeConverter(),
-            new IntPtrConverter(),
-            new IPAddressConverter()
-        };
 
         private static JsonSerializerOptions _Options = new JsonSerializerOptions
         {
@@ -118,8 +76,11 @@
         {
             JsonSerializerOptions options = new JsonSerializerOptions(_Options);
 
-            foreach (JsonConverter converter in _Converters)
-                if (!options.Converters.Contains(converter)) options.Converters.Add(converter);
+            options.Converters.Add(new ExceptionConverter<Exception>());
+            options.Converters.Add(new NameValueCollectionConverter());
+            options.Converters.Add(new JsonStringEnumConverter());
+            options.Converters.Add(new DateTimeConverter());
+            options.Converters.Add(new IPAddressConverter());
 
             return JsonSerializer.Deserialize<T>(json, options);
         }
@@ -139,6 +100,13 @@
             if (!pretty)
             {
                 options.WriteIndented = false;
+
+                options.Converters.Add(new ExceptionConverter<Exception>());
+                options.Converters.Add(new NameValueCollectionConverter());
+                options.Converters.Add(new JsonStringEnumConverter());
+                options.Converters.Add(new DateTimeConverter());
+                options.Converters.Add(new IPAddressConverter());
+
                 string json = JsonSerializer.Serialize(obj, options);
                 options = null;
                 return json;
@@ -146,6 +114,13 @@
             else
             {
                 options.WriteIndented = true;
+
+                options.Converters.Add(new ExceptionConverter<Exception>());
+                options.Converters.Add(new NameValueCollectionConverter());
+                options.Converters.Add(new JsonStringEnumConverter());
+                options.Converters.Add(new DateTimeConverter());
+                options.Converters.Add(new IPAddressConverter());
+
                 string json = JsonSerializer.Serialize(obj, options);
                 options = null;
                 return json;

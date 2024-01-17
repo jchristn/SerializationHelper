@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;net462;net48;net6.0;net7.0</TargetFrameworks>
-		<Version>1.0.1</Version>
+		<TargetFrameworks>net462;net48;net6.0;net7.0;net8.0</TargetFrameworks>
+		<Version>1.0.2</Version>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DocumentationFile>Serializer.xml</DocumentationFile>
 		<Authors>Joel Christner</Authors>
 		<Description>SerializationHelper is a simple wrapper around System.Text.Json to overcome some of the common challenges developers face when using Microsoft's JSON library compared to the Newtonsoft.Json library. </Description>
-		<Copyright>(c)2023 Joel Christner</Copyright>
+		<Copyright>(c)2024 Joel Christner</Copyright>
 		<PackageProjectUrl>https://github.com/jchristn/SerializationHelper</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="7.0.3" />
+		<PackageReference Include="System.Text.Json" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

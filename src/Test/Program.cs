@@ -1,5 +1,7 @@
 ﻿namespace Test
 {
+    using System;
+    using System.Collections.Specialized;
     using GetSomeInput;
     using SerializationHelper;
 
@@ -31,6 +33,9 @@
                     case "de":
                         Deserialize();
                         break;
+                    case "ex":
+                        SerializeException();
+                        break;
                     case "gc":
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
@@ -48,13 +53,14 @@
             Console.WriteLine("    cls        Clear the screen");
             Console.WriteLine("    se         Serialize");
             Console.WriteLine("    de         Deserialize");
+            Console.WriteLine("    ex         Throw an exception and serialize it");
             Console.WriteLine("    gc         Run garbage collection");
             Console.WriteLine("");
         }
 
         static void Serialize()
         {
-            int count = Inputty.GetInteger("Count:", 5000, true, false);
+            int count = Inputty.GetInteger("Count:", 10, true, false);
 
             for (int i = 0; i < count; i++)
             {
@@ -66,7 +72,9 @@
                     Birthday = DateTime.Now
                 };
 
-                Console.WriteLine(i + ": " + Serializer.SerializeJson(p, false));
+                p.Attributes.Add("handsome", "true");
+
+                Console.WriteLine(i + ": " + Serializer.SerializeJson(p, true));
             }
         }
 
@@ -81,6 +89,19 @@
                 Console.WriteLine(i + ": " + p.ToString());
             }
         }
+
+        static void SerializeException()
+        {
+            try
+            {
+                throw new DivideByZeroException();
+            }
+            catch (Exception e)
+            {
+                e.Data.Add("Hello", "World");
+                Console.WriteLine(Serializer.SerializeJson(e, true));
+            }
+        }
     }
 
     public class Person
@@ -89,7 +110,7 @@
         public string FirstName { get; set; } = "Joe";
         public string LastName { get; set; } = "Smith";
         public DateTime Birthday { get; set; } = DateTime.UtcNow.AddYears(-40);
-
+        public NameValueCollection Attributes { get; set; } = new NameValueCollection(StringComparer.InvariantCultureIgnoreCase);
         public Person()
         {
 
