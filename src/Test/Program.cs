@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Specialized;
+    using System.Text;
     using GetSomeInput;
     using SerializationHelper;
 
@@ -69,7 +70,8 @@
                     Id = 10,
                     FirstName = "Joe",
                     LastName = "Smith",
-                    Birthday = DateTime.Now
+                    Birthday = DateTime.Now,
+                    Bytes = Encoding.UTF8.GetBytes("Hello, world!")
                 };
 
                 p.Attributes.Add("handsome", "true");
@@ -85,7 +87,7 @@
             for (int i = 0; i < count; i++)
             {
                 string birthday = DateTime.UtcNow.AddYears(-50).ToString(Serializer.DateTimeFormat);
-                Person p = Serializer.DeserializeJson<Person>("{\"FirstName\":\"Joe\",\"LastName\":\"Smith\",\"Birthday\":\"" + birthday + "\"}");
+                Person p = Serializer.DeserializeJson<Person>("{\"FirstName\":\"Joe\",\"LastName\":\"Smith\",\"Birthday\":\"" + birthday + "\", \"Bytes\":\"aGVsbG8gd29ybGQ=\"}");
                 Console.WriteLine(i + ": " + p.ToString());
             }
         }
@@ -111,6 +113,8 @@
         public string LastName { get; set; } = "Smith";
         public DateTime Birthday { get; set; } = DateTime.UtcNow.AddYears(-40);
         public NameValueCollection Attributes { get; set; } = new NameValueCollection(StringComparer.InvariantCultureIgnoreCase);
+        public byte[] Bytes { get; set; } = Encoding.UTF8.GetBytes("hi");
+
         public Person()
         {
 
@@ -118,7 +122,7 @@
 
         public override string ToString()
         {
-            return FirstName + " " + LastName + " " + Birthday.ToString();
+            return FirstName + " " + LastName + " " + Birthday.ToString() + " " + Encoding.UTF8.GetString(Bytes);
         }
     }
 }

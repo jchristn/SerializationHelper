@@ -34,6 +34,11 @@
             }
         }
 
+        /// <summary>
+        /// True to include null properties when serializing, false to not include null properties when serializing.
+        /// </summary>
+        public static bool IncludeNullProperties { get; set; } = false;
+
         #endregion
 
         #region Private-Members
@@ -96,6 +101,7 @@
             if (obj == null) return null;
 
             JsonSerializerOptions options = new JsonSerializerOptions(_Options);
+            if (!IncludeNullProperties) options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
             if (!pretty)
             {

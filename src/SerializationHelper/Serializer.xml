@@ -14,6 +14,11 @@
             DateTime format.
             </summary>
         </member>
+        <member name="P:SerializationHelper.Serializer.IncludeNullProperties">
+            <summary>
+            True to include null properties when serializing, false to not include null properties when serializing.
+            </summary>
+        </member>
         <member name="M:SerializationHelper.Serializer.DeserializeJson``1(System.Byte[])">
             <summary>
             Deserialize JSON to an instance.

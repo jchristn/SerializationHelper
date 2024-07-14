@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net462;net48;net6.0;net7.0;net8.0</TargetFrameworks>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DocumentationFile>Serializer.xml</DocumentationFile>
@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="8.0.1" />
+		<PackageReference Include="System.Text.Json" Version="8.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
