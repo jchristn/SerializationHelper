@@ -16,9 +16,13 @@ This project was built to provide a simple interface over ```System.Text.Json```
 
 This library is my attempt at trying to make the Microsoft implementation behave in a manner consistent to what I experienced while using the Newtonsoft implementation.
 
-## New in v1.0.x
+## New in v2.0.x
 
-- Initial release
+v2.0.x
+
+- Migrate from a static class
+- Allow users to add their own default `JsonSerializerOptions`
+- Allow users to add and manage their own default list of `JsonConverter` objects
 
 ## Example Project
 
@@ -34,13 +38,29 @@ public class Person
   public string LastName { get; set; }
 }
 
+Serializer serializer = new Serializer();
+
 Person p1 = new Person { Id = 10, FirstName = "Joe", LastName = "Smith" };
-Console.WriteLine(Serializer.SerializeJson(p1, false)); // false = not pretty print
+Console.WriteLine(serializer.SerializeJson(p1, false)); // false = not pretty print
 // {"Id":10,"FirstName":"Joe","LastName":"Smith"}
 
-Person p2 = Serializer.DeserializeJson<Person>("{\"Id\":10,\"FirstName\":\"Joe\",\"LastName\":\"Smith\"}");
+Person p2 = serializer.DeserializeJson<Person>("{\"Id\":10,\"FirstName\":\"Joe\",\"LastName\":\"Smith\"}");
 Console.WriteLine(p2.Id + ": " + p2.FirstName + " " + p2.LastName);
 // 10: Joe Smith
+```
+
+## Add Your Own JsonConverter
+
+```csharp
+using SerializationHelper;
+
+public class MyClassConverter : JsonConverter<MyClass>
+{
+  ...
+}
+
+Serializer serializer = new Serializer();
+serializer.DefaultConverters.Add(new MyClassConverter());
 ```
 
 ## Version History

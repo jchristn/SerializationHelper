@@ -9,6 +9,7 @@
     public static class Program
     {
         static bool _RunForever = true;
+        static Serializer _Serializer = new Serializer();
 
         public static void Main(string[] args)
         {
@@ -76,7 +77,7 @@
 
                 p.Attributes.Add("handsome", "true");
 
-                Console.WriteLine(i + ": " + Serializer.SerializeJson(p, true));
+                Console.WriteLine(i + ": " + _Serializer.SerializeJson(p, true));
             }
         }
 
@@ -87,7 +88,7 @@
             for (int i = 0; i < count; i++)
             {
                 string birthday = DateTime.UtcNow.AddYears(-50).ToString(Serializer.DateTimeFormat);
-                Person p = Serializer.DeserializeJson<Person>("{\"FirstName\":\"Joe\",\"LastName\":\"Smith\",\"Birthday\":\"" + birthday + "\", \"Bytes\":\"aGVsbG8gd29ybGQ=\"}");
+                Person p = _Serializer.DeserializeJson<Person>("{\"FirstName\":\"Joe\",\"LastName\":\"Smith\",\"Birthday\":\"" + birthday + "\", \"Bytes\":\"aGVsbG8gd29ybGQ=\"}");
                 Console.WriteLine(i + ": " + p.ToString());
             }
         }
@@ -101,7 +102,7 @@
             catch (Exception e)
             {
                 e.Data.Add("Hello", "World");
-                Console.WriteLine(Serializer.SerializeJson(e, true));
+                Console.WriteLine(_Serializer.SerializeJson(e, true));
             }
         }
     }

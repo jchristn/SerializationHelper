@@ -14,7 +14,7 @@
     /// <summary>
     /// JSON serializer.
     /// </summary>
-    public static class Serializer
+    public class Serializer
     {
         #region Public-Members
 
@@ -37,7 +37,39 @@
         /// <summary>
         /// True to include null properties when serializing, false to not include null properties when serializing.
         /// </summary>
-        public static bool IncludeNullProperties { get; set; } = false;
+        public bool IncludeNullProperties { get; set; } = false;
+
+        /// <summary>
+        /// Default serializer options.
+        /// </summary>
+        public JsonSerializerOptions DefaultOptions
+        {
+            get
+            {
+                return _DefaultOptions;
+            }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(DefaultOptions));
+                _DefaultOptions = value;
+            }
+        }
+
+        /// <summary>
+        /// Default converters.
+        /// </summary>
+        public List<JsonConverter> DefaultConverters
+        {
+            get
+            {
+                return _DefaultConverters;
+            }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(DefaultConverters));
+                _DefaultConverters = value;
+            }
+        }
 
         #endregion
 
@@ -45,11 +77,20 @@
 
         private static string _DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.ffffffZ";
 
-        private static JsonSerializerOptions _Options = new JsonSerializerOptions
+        private JsonSerializerOptions _DefaultOptions = new JsonSerializerOptions
         {
             AllowTrailingCommas = true,
             ReadCommentHandling = JsonCommentHandling.Skip,
             NumberHandling = JsonNumberHandling.AllowReadingFromString
+        };
+
+        private List<JsonConverter> _DefaultConverters = new List<JsonConverter>
+        {
+            new ExceptionConverter<Exception>(),
+            new NameValueCollectionConverter(),
+            new JsonStringEnumConverter(),
+            new DateTimeConverter(),
+            new IPAddressConverter()
         };
 
         #endregion
@@ -66,7 +107,7 @@
         /// <typeparam name="T">Type.</typeparam>
         /// <param name="json">JSON bytes.</param>
         /// <returns>Instance.</returns>
-        public static T DeserializeJson<T>(byte[] json)
+        public T DeserializeJson<T>(byte[] json)
         {
             return DeserializeJson<T>(Encoding.UTF8.GetString(json));
         }
@@ -77,15 +118,14 @@
         /// <typeparam name="T">Type.</typeparam>
         /// <param name="json">JSON string.</param>
         /// <returns>Instance.</returns>
-        public static T DeserializeJson<T>(string json)
+        public T DeserializeJson<T>(string json)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions(_Options);
+            JsonSerializerOptions options = new JsonSerializerOptions(_DefaultOptions);
 
-            options.Converters.Add(new ExceptionConverter<Exception>());
-            options.Converters.Add(new NameValueCollectionConverter());
-            options.Converters.Add(new JsonStringEnumConverter());
-            options.Converters.Add(new DateTimeConverter());
-            options.Converters.Add(new IPAddressConverter());
+            foreach (JsonConverter converter in _DefaultConverters)
+            {
+                options.Converters.Add(converter);
+            }
 
             return JsonSerializer.Deserialize<T>(json, options);
         }
@@ -96,23 +136,22 @@
         /// <param name="obj">Object.</param>
         /// <param name="pretty">Pretty print.</param>
         /// <returns>JSON.</returns>
-        public static string SerializeJson(object obj, bool pretty = true)
+        public string SerializeJson(object obj, bool pretty = true)
         {
             if (obj == null) return null;
 
-            JsonSerializerOptions options = new JsonSerializerOptions(_Options);
+            JsonSerializerOptions options = new JsonSerializerOptions(_DefaultOptions);
+
+            foreach (JsonConverter converter in _DefaultConverters)
+            {
+                options.Converters.Add(converter);
+            }
+
             if (!IncludeNullProperties) options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
             if (!pretty)
             {
                 options.WriteIndented = false;
-
-                options.Converters.Add(new ExceptionConverter<Exception>());
-                options.Converters.Add(new NameValueCollectionConverter());
-                options.Converters.Add(new JsonStringEnumConverter());
-                options.Converters.Add(new DateTimeConverter());
-                options.Converters.Add(new IPAddressConverter());
-
                 string json = JsonSerializer.Serialize(obj, options);
                 options = null;
                 return json;
@@ -120,13 +159,6 @@
             else
             {
                 options.WriteIndented = true;
-
-                options.Converters.Add(new ExceptionConverter<Exception>());
-                options.Converters.Add(new NameValueCollectionConverter());
-                options.Converters.Add(new JsonStringEnumConverter());
-                options.Converters.Add(new DateTimeConverter());
-                options.Converters.Add(new IPAddressConverter());
-
                 string json = JsonSerializer.Serialize(obj, options);
                 options = null;
                 return json;
@@ -139,7 +171,7 @@
         /// <typeparam name="T">Type.</typeparam>
         /// <param name="o">Object.</param>
         /// <returns>Instance.</returns>
-        public static T CopyObject<T>(object o)
+        public T CopyObject<T>(object o)
         {
             if (o == null) return default(T);
             string json = SerializeJson(o, false);

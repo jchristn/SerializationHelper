@@ -2,10 +2,14 @@
 
 ## Current Version
 
-v1.0.x
+v2.0.x
 
-- Initial release
+- Migrate from a static class
+- Allow users to add their own default `JsonSerializerOptions`
+- Allow users to add and manage their own default list of `JsonConverter` objects
 
 ## Previous Versions
 
-Notes from previous releases will be moved here.
+v1.0.x
+
+- Initial release
