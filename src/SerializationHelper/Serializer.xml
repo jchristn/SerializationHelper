@@ -185,5 +185,47 @@
             <param name="value">Value.</param>
             <param name="options">Options.</param>
         </member>
+        <member name="T:SerializationHelper.Serializer.StrictEnumConverter`1">
+            <summary>
+            Strict enum converter.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.StrictEnumConverter`1.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Read.
+            </summary>
+            <param name="reader">Reader.</param>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">JSON serializer options.</param>
+            <returns>DateTime.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.StrictEnumConverter`1.Write(System.Text.Json.Utf8JsonWriter,`0,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Write.
+            </summary>
+            <param name="writer">Writer.</param>
+            <param name="value">Value.</param>
+            <param name="options">JSON serializer options.</param>
+        </member>
+        <member name="T:SerializationHelper.Serializer.StrictEnumConverterFactory">
+            <summary>
+            Strict enum converter factory.
+            </summary>
+        </member>
+        <member name="M:SerializationHelper.Serializer.StrictEnumConverterFactory.CanConvert(System.Type)">
+            <summary>
+            Can convert.
+            </summary>
+            <param name="typeToConvert">Type to convert.</param>
+            <returns>True if convertible.</returns>
+        </member>
+        <member name="M:SerializationHelper.Serializer.StrictEnumConverterFactory.CreateConverter(System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Create converter.
+            </summary>
+            <param name="typeToConvert">Type to convert.</param>
+            <param name="options">JSON serializer options.</param>
+            <returns>JsonConverter.</returns>
+        </member>
     </members>
 </doc>

@@ -88,9 +88,9 @@
         {
             new ExceptionConverter<Exception>(),
             new NameValueCollectionConverter(),
-            new JsonStringEnumConverter(),
             new DateTimeConverter(),
-            new IPAddressConverter()
+            new IPAddressConverter(),
+            new StrictEnumConverterFactory()
         };
 
         #endregion
@@ -123,9 +123,7 @@
             JsonSerializerOptions options = new JsonSerializerOptions(_DefaultOptions);
 
             foreach (JsonConverter converter in _DefaultConverters)
-            {
                 options.Converters.Add(converter);
-            }
 
             return JsonSerializer.Deserialize<T>(json, options);
         }
@@ -143,9 +141,7 @@
             JsonSerializerOptions options = new JsonSerializerOptions(_DefaultOptions);
 
             foreach (JsonConverter converter in _DefaultConverters)
-            {
                 options.Converters.Add(converter);
-            }
 
             if (!IncludeNullProperties) options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
@@ -419,6 +415,88 @@
             public override void Write(Utf8JsonWriter writer, IPAddress value, JsonSerializerOptions options)
             {
                 writer.WriteStringValue(value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Strict enum converter.
+        /// </summary>
+        public class StrictEnumConverter<TEnum> : JsonConverter<TEnum> where TEnum : struct, Enum
+        {
+            /// <summary>
+            /// Read.
+            /// </summary>
+            /// <param name="reader">Reader.</param>
+            /// <param name="typeToConvert">Type to convert.</param>
+            /// <param name="options">JSON serializer options.</param>
+            /// <returns>DateTime.</returns>
+            public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                if (reader.TokenType == JsonTokenType.String)
+                {
+                    string stringValue = reader.GetString();
+                    if (!Enum.TryParse<TEnum>(stringValue, ignoreCase: true, out var enumValue) ||
+                        !Enum.IsDefined(typeof(TEnum), enumValue))
+                    {
+                        throw new JsonException($"String value '{stringValue}' is not valid for enum type {typeof(TEnum).Name}");
+                    }
+                    return enumValue;
+                }
+
+                if (reader.TokenType == JsonTokenType.Number)
+                {
+                    int intValue = reader.GetInt32();
+                    // Explicitly get the defined values
+                    var definedValues = (int[])Enum.GetValues(typeof(TEnum));
+
+                    if (!Array.Exists(definedValues, x => x == intValue))
+                    {
+                        throw new JsonException($"Integer value {intValue} is not defined in enum {typeof(TEnum).Name}");
+                    }
+
+                    return (TEnum)Enum.ToObject(typeof(TEnum), intValue);
+                }
+
+                throw new JsonException($"Cannot convert {reader.TokenType} to enum {typeof(TEnum).Name}");
+            }
+
+            /// <summary>
+            /// Write.
+            /// </summary>
+            /// <param name="writer">Writer.</param>
+            /// <param name="value">Value.</param>
+            /// <param name="options">JSON serializer options.</param>
+            public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Strict enum converter factory.
+        /// </summary>
+        public class StrictEnumConverterFactory : JsonConverterFactory
+        {
+            /// <summary>
+            /// Can convert.
+            /// </summary>
+            /// <param name="typeToConvert">Type to convert.</param>
+            /// <returns>True if convertible.</returns>
+            public override bool CanConvert(Type typeToConvert)
+            {
+                return typeToConvert.IsEnum;
+            }
+
+            /// <summary>
+            /// Create converter.
+            /// </summary>
+            /// <param name="typeToConvert">Type to convert.</param>
+            /// <param name="options">JSON serializer options.</param>
+            /// <returns>JsonConverter.</returns>
+            public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+            {
+                var converterType = typeof(StrictEnumConverter<>).MakeGenericType(typeToConvert);
+                return (JsonConverter)Activator.CreateInstance(converterType);
             }
         }
 
