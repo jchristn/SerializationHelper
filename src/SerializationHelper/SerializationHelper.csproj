@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net462;net48;net8.0</TargetFrameworks>
-		<Version>2.0.3</Version>
+		<Version>2.1.0</Version>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DocumentationFile>Serializer.xml</DocumentationFile>
@@ -15,7 +15,7 @@
 		<RepositoryUrl>https://github.com/jchristn/SerializationHelper</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>json serialize serializer serialization deserialize deserializer deserialization system.text.json newtonsoft.json</PackageTags>
-		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
+		<PackageReleaseNotes>Updated System.Text.Json to 10.0.11 and refreshed test tooling dependencies.</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="8.0.5" />
+		<PackageReference Include="System.Text.Json" Version="10.0.11" />
 	</ItemGroup>
 
 	<ItemGroup>

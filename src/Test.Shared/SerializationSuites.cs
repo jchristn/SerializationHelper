@@ -4,6 +4,7 @@ namespace Test.Shared
     using System.Collections.Generic;
     using System.Text;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
     using SerializationHelper;
     using Touchstone.Core;
@@ -84,6 +85,15 @@ namespace Test.Shared
                     string json = s.SerializeJson(new Widget { Name = "x", Count = 1 }, false);
                     Check.NotNull(json);
                     Check.DoesNotContain(json, "\n", "Compact JSON should not contain newlines.");
+                }),
+
+                Case(SerializeId, "DefaultsToPrettyWhenUnspecified", "Serialization is pretty when pretty argument omitted", () =>
+                {
+                    Serializer s = NewSerializer();
+                    // The pretty parameter defaults to true.
+                    string json = s.SerializeJson(new Widget { Name = "x", Count = 1 });
+                    Check.NotNull(json);
+                    Check.Contains(json, "\n", "Default serialization should be pretty (indented).");
                 }),
 
                 Case(SerializeId, "SimplePocoContainsProperties", "Simple POCO serializes its properties", () =>
@@ -225,6 +235,12 @@ namespace Test.Shared
                     Check.Throws<JsonException>(() => s.DeserializeJson<Widget>(""));
                 }),
 
+                Case(DeserializeId, "WhitespaceStringThrows", "Deserialize whitespace-only string throws JsonException", () =>
+                {
+                    Serializer s = NewSerializer();
+                    Check.Throws<JsonException>(() => s.DeserializeJson<Widget>("   "));
+                }),
+
                 Case(DeserializeId, "MalformedJsonThrows", "Deserialize malformed JSON throws JsonException", () =>
                 {
                     Serializer s = NewSerializer();
@@ -352,6 +368,25 @@ namespace Test.Shared
                     Check.Equal("Katherine", copy.Buyer.FirstName);
                 }),
 
+                Case(CopyId, "DeepCopyCollectionsAreIndependent", "CopyObject produces independent collections", () =>
+                {
+                    Serializer s = NewSerializer();
+                    Order original = new Order();
+                    original.Items.Add("a");
+                    original.Quantities["a"] = 1;
+
+                    Order copy = s.CopyObject<Order>(original);
+                    // Mutating the copy must not affect the original.
+                    copy.Items.Add("b");
+                    copy.Quantities["a"] = 99;
+                    copy.Quantities["c"] = 3;
+
+                    Check.Equal(1, original.Items.Count);
+                    Check.Equal(1, original.Quantities["a"]);
+                    Check.False(original.Quantities.ContainsKey("c"), "Original dictionary should not gain the copy's key.");
+                    Check.Equal(2, copy.Items.Count);
+                }),
+
                 Case(CopyId, "ValueTypeCopied", "CopyObject copies a boxed value type", () =>
                 {
                     Serializer s = NewSerializer();
@@ -415,6 +450,31 @@ namespace Test.Shared
                 Case(ConfigId, "SetDateTimeFormatEmptyThrows", "Setting DateTimeFormat to empty throws", () =>
                 {
                     Check.Throws<ArgumentNullException>(() => Serializer.DateTimeFormat = "");
+                }),
+
+                Case(ConfigId, "CustomDefaultOptionsHonored", "Custom DefaultOptions (naming policy) affects output", () =>
+                {
+                    Serializer s = NewSerializer();
+                    s.DefaultOptions = new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    };
+                    string json = s.SerializeJson(new Widget { Name = "x", Count = 1 }, false);
+                    Check.Contains(json, "\"name\":\"x\"", "Expected camelCased property names from custom DefaultOptions.");
+                    Check.DoesNotContain(json, "\"Name\"");
+                }),
+
+                Case(ConfigId, "CustomDefaultConvertersHonored", "Clearing DefaultConverters changes serialization behavior", () =>
+                {
+                    Serializer s = NewSerializer();
+                    // With the default StrictEnum converter, enums serialize by name.
+                    Check.Contains(s.SerializeJson(new Order { Color = Color.Blue }, false), "\"Color\":\"Blue\"");
+
+                    // Removing the converters falls back to System.Text.Json's default (numeric) enum handling.
+                    s.DefaultConverters = new List<JsonConverter>();
+                    string json = s.SerializeJson(new Order { Color = Color.Blue }, false);
+                    Check.Contains(json, "\"Color\":2", "Expected numeric enum output once converters are cleared.");
+                    Check.DoesNotContain(json, "\"Blue\"");
                 })
             };
 

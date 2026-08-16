@@ -53,6 +53,12 @@ namespace Test.Shared
                     Check.Throws<FormatException>(() => s.DeserializeJson<Person>("{\"Birthday\":\"not-a-date\"}"));
                 }),
 
+                Case(DateTimeId, "EmptyStringThrowsFormatException", "Empty DateTime string throws FormatException", () =>
+                {
+                    Serializer s = NewSerializer();
+                    Check.Throws<FormatException>(() => s.DeserializeJson<Person>("{\"Birthday\":\"\"}"));
+                }),
+
                 Case(DateTimeId, "CustomFormatHonored", "Custom DateTimeFormat is honored (static, restored)", () =>
                 {
                     string original = Serializer.DateTimeFormat;
@@ -110,6 +116,13 @@ namespace Test.Shared
                     Serializer s = NewSerializer();
                     Order o = s.DeserializeJson<Order>("{\"Status\":404}");
                     Check.Equal(StatusCode.NotFound, o.Status);
+                }),
+
+                Case(EnumId, "ReadsZeroValueInteger", "Enum read from the defined zero value", () =>
+                {
+                    Serializer s = NewSerializer();
+                    Order o = s.DeserializeJson<Order>("{\"Color\":0}");
+                    Check.Equal(Color.Red, o.Color);
                 }),
 
                 Case(EnumId, "InvalidNameThrows", "Invalid enum name throws JsonException", () =>
@@ -203,6 +216,22 @@ namespace Test.Shared
                     string[] values = p.Attributes.GetValues("tag");
                     Check.NotNull(values);
                     Check.Equal(3, values.Length);
+                }),
+
+                Case(NvcId, "MultiValueRoundTrips", "Multi-valued entry survives a serialize/deserialize round trip", () =>
+                {
+                    Serializer s = NewSerializer();
+                    Person original = new Person();
+                    original.Attributes.Add("tag", "a");
+                    original.Attributes.Add("tag", "b");
+
+                    // Write joins as "a, b"; Read splits on comma and trims back to individual values.
+                    Person copy = s.DeserializeJson<Person>(s.SerializeJson(original, false));
+                    string[] values = copy.Attributes.GetValues("tag");
+                    Check.NotNull(values);
+                    Check.Equal(2, values.Length);
+                    Check.True(new List<string>(values).Contains("a"), "Expected value 'a' after round trip.");
+                    Check.True(new List<string>(values).Contains("b"), "Expected value 'b' after round trip.");
                 }),
 
                 Case(NvcId, "ReadsNullValue", "Null value in NameValueCollection is accepted", () =>
@@ -311,6 +340,39 @@ namespace Test.Shared
                 {
                     Serializer s = NewSerializer();
                     Check.Throws<NotSupportedException>(() => s.DeserializeJson<Exception>("{\"Message\":\"x\"}"));
+                }),
+
+                Case(ExceptionId, "OmitsNullPropertiesByDefault", "Null exception properties (InnerException) omitted by default", () =>
+                {
+                    Serializer s = NewSerializer();
+                    // Default IncludeNullProperties == false, so the converter drops null-valued members.
+                    string json;
+                    try
+                    {
+                        throw new InvalidOperationException("boom");
+                    }
+                    catch (Exception e)
+                    {
+                        json = s.SerializeJson(e, false);
+                    }
+                    Check.DoesNotContain(json, "InnerException");
+                }),
+
+                Case(ExceptionId, "IncludesNullPropertiesWhenEnabled", "Null exception properties included when IncludeNullProperties is true", () =>
+                {
+                    Serializer s = NewSerializer();
+                    s.IncludeNullProperties = true;
+                    string json;
+                    try
+                    {
+                        throw new InvalidOperationException("boom");
+                    }
+                    catch (Exception e)
+                    {
+                        json = s.SerializeJson(e, false);
+                    }
+                    // InnerException is null here; with null properties enabled it is written explicitly.
+                    Check.Contains(json, "\"InnerException\":null");
                 })
             };
 
